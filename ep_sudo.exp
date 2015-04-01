@@ -1,0 +1,21 @@
+#!/usr/local/bin/expect -f
+
+set timeout 5
+
+set ip [lindex $argv 0]
+set username1 [lindex $argv 1]
+set password1 [lindex $argv 2]
+set username2 [lindex $argv 3]
+set password2 [lindex $argv 4]
+set exescript [lindex $argv 5]
+
+spawn ssh ${username1}@$ip "sudo -u $username2 sh $exescript"
+
+expect {
+	"*(yes/no)" { send "yes\r;exp_continue }
+	"*assword:" { send "$password1\r" }
+}
+expect {
+	"*assword*:" { send "$password1\r" }
+}
+expect eof;
